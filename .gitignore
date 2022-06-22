@@ -1,0 +1,10 @@
+media
+static
+migrations
+__pycache__
+test.py
+*.log
+*.pid
+db.sqlite3
+.vscode
+uwsgi_server
