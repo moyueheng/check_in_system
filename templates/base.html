@@ -1,19 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rTTiRUKnSWaDu2FjhzWFl8/JuUZMlplyWE/djenb2LoKqkgLGfEGfSrL7XDLoB1M" crossorigin="anonymous">
+    <!-- 引入 layui.css -->
+    <!-- <link href="//unpkg.com/layui@2.6.13/dist/css/layui.css" rel="stylesheet"> -->
+    {% block head %}
+    {% endblock head %}
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/static/files/elementUI/index.css">
     <title>签到系统</title>
 </head>
-<body>
-    <!-- .test 快捷键 -->
-    <div class="test"></div>
-    <!-- .Lorem快捷键  -->
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto esse recusandae repellendus eos. Quam, nostrum corporis? Quos nulla laborum quisquam incidunt ipsam inventore eos, amet repellendus est nihil maiores dolores?
-    <div class="test"><a href="" id="id"></a></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-Nj1D6pu2WnJojj+67GiU9ZFNwbl7bUWX5Kj5MS22C8bGjllemM9pvQyvj14zJb58" crossorigin="anonymous"></script>
+<body>
+
+    <el-container>
+        {% block header %}
+        <el-header id='header'>
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"
+                background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+                <!-- <div class="center"> -->
+                <el-menu-item index="1"><a :href="[[ url ]]">首页</a></el-menu-item>
+                <el-menu-item index="2">重庆工商大学</el-menu-item>
+                <el-menu-item index="3">人工智能学院</el-menu-item>
+                <el-menu-item index="4">19级智能科学与技术二班</el-menu-item>
+                <el-menu-item index="5">签到系统</el-menu-item>
+                <!-- </div> -->
+            </el-menu>
+        </el-header>
+        {% endblock header %}
+
+        {% block main %}
+
+        {% endblock main %}
+
+        {% block footer %}
+        <div id='footer'>
+            <el-table :data="students" style="width: 100%" :row-class-name="tableRowClassName">
+                <el-table-column prop="student_id" label="学号" width="180">
+                </el-table-column>
+                <el-table-column prop="name" label="姓名" width="180">
+                </el-table-column>
+                <el-table-column prop="status" label="是否签到">
+                </el-table-column>
+                <el-table-column prop="is_face_check" label="是否通过人脸识别">
+                </el-table-column>
+                <el-table-column prop="is_mask_check" label="是否通过口罩识别">
+                </el-table-column>
+            </el-table>
+        </div>
+
+
+        {% endblock footer %}
+
+
+    </el-container>
+
+    <!-- VUI要在element-UI之前导入 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <!-- 引入组件库 -->
+    <script src="/static/files/elementUI/index.js"></script>
+    <!-- 引入 layui.js -->
+    <!-- <script src="//unpkg.com/layui@2.6.13/dist/layui.js"></script> -->
+
+    <script>
+        new Vue({
+            el: '#header',
+            delimiters: ['[[', ']]'],
+            data: function () {
+                return {
+                    activeIndex: '1',
+                    url: 'http://127.0.0.1:8000',
+                };
+            },
+            methods: {
+
+            }
+        });
+
+        new Vue({
+            el: '#footer',
+            delimiters: ['[[', ']]'],
+            data: function () {
+                return {
+                    students: [{
+                        student_id: '2019135229',
+                        name: '莫岳恒',
+                        status: 'true',
+                        is_mask_check: 'true',
+                        is_face_check: 'true',
+                    }, {
+                        student_id: '2019135229',
+                        name: '莫岳恒',
+                        status: 'true',
+                        is_mask_check: 'true',
+                        is_face_check: 'true',
+                    }, {
+                        student_id: '2019135229',
+                        name: '莫岳恒',
+                        status: 'false',
+                        is_mask_check: 'true',
+                        is_face_check: 'true',
+                    },
+                    ]
+                };
+            },
+            methods: {
+                tableRowClassName({ row, rowIndex }) {
+                    if (row.status === 'true') {
+                        return 'success-row';
+                    }
+                    return 'warning-row';
+                }
+            }
+        });
+    </script>
 </body>
+<style>
+    .el-table .warning-row {
+        background: rgb(208, 53, 187);
+    }
+
+    .el-table .success-row {
+        background: #4cc566;
+    }
+
+
+    .el-header,
+    .el-footer {
+        background-color: #B3C0D1;
+        color: #333;
+        text-align: center;
+        line-height: 60px;
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        text-align: center;
+        line-height: 400px;
+    }
+
+    body>.el-container {
+        margin-bottom: 0px;
+    }
+</style>
+
 </html>

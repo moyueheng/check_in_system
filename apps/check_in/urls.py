@@ -19,7 +19,9 @@ from . import views
 app_name = 'check_in'
 
 urlpatterns = [
-    re_path('face_identify', view=views.FaceIdentifyView.as_view(), name='face_identify'),
-    re_path('mask_det', view=views.MaskDetView.as_view(), name='face_identify'),
-    re_path('students', view=views.StudentsView.as_view(), name='students'),
+# /face_identify
+    re_path(r'^$', view=views.IndexView.as_view(), name='index'),
+    re_path(r'^face_identify[/]?$', view=views.FaceIdentifyView.as_view(), name='face_identify'),
+    re_path(r'^mask_det[/]?$', view=views.MaskDetView.as_view(), name='face_identify'),
+    re_path(r'^students[/]?$', view=views.StudentsView.as_view(), name='students'),
 ]
