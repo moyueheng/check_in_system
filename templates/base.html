@@ -62,9 +62,8 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <!-- 引入组件库 -->
     <script src="/static/files/elementUI/index.js"></script>
-    <!-- 引入 layui.js -->
-    <!-- <script src="//unpkg.com/layui@2.6.13/dist/layui.js"></script> -->
-
+    <!-- 引入 axios.js -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         new Vue({
             el: '#header',
@@ -72,7 +71,7 @@
             data: function () {
                 return {
                     activeIndex: '1',
-                    url: 'http://127.0.0.1:8000',
+                    url: 'https://checkin.coderxiaomo.top/',
                 };
             },
             methods: {
@@ -107,9 +106,37 @@
                     ]
                 };
             },
+            mounted: function () {
+                let url = 'https://checkin.coderxiaomo.top/students/';
+                axios.get(url).then(response => {
+                    // console.log(response);
+                    // 清洗数据
+                    students = response.data;
+                    students.forEach(element => {
+                        if (element.status) {
+                            element.status = '成功';
+                        }
+                        if (element.is_face_check) {
+                            element.is_face_check = '成功'
+                        }
+                        if (element.is_mask_check) {
+                            element.is_mask_check = '成功'
+                        }
+                    });
+                    console.log('response.data');
+                    console.log(response.data)
+                    console.log('this.students');
+                    console.log(this.students)
+                    this.students = students; // 这个地方出问题了
+                    console.log('this.students');
+                    console.log(this.students)
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
             methods: {
                 tableRowClassName({ row, rowIndex }) {
-                    if (row.status === 'true') {
+                    if (row.status === '成功') {
                         return 'success-row';
                     }
                     return 'warning-row';

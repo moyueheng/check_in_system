@@ -184,9 +184,10 @@
 	}
 
 	.main__upload-btn--confirm {
-		width: 172px;
+		width: 86px;
 		background: #FFA929;
 		display: none;
+		/* 一开始默认不显示的 */
 	}
 
 	.main__upload-btn--color {
@@ -523,7 +524,6 @@
 	<section class="main__upload">
 		<h2 class="main__title">头像裁剪</h2>
 		<p class="main__hint">将头像调整为你喜欢的样子就可以上传啦</p>
-
 		<div class="flex-row-wrap">
 			<div id="main__photo" class="main__upload-left">
 				<div class="main__upload-left--thumbBox"></div>
@@ -533,7 +533,6 @@
 			<div class="main__upload-right">
 			</div>
 		</div>
-
 		<div class="main__upload-left--btn flex-row-wrap">
 			<button id="main__lessen" class="main__upload-btn flex-center">
 				<!-- 缩小 -->
@@ -546,11 +545,15 @@
 			</button>
 
 			<button id="main__rop" class="main__upload-btn main__upload-btn--color flex-center">裁剪</button>
-			<button id="main__submit" class="main__upload-btn main__upload-btn--confirm flex-center" style="font-size=10">人脸识别</button>
-			<button id="main__masksubmit" class="main__upload-btn main__upload-btn--confirm flex-center">口罩识别</button>
+
+			<button id="main__submit" class="main__upload-btn main__upload-btn--confirm flex-center"
+				style="font-size=10">人脸识别</button>
+
+			<button id="main__masksubmit" class="main__upload-btn main__upload-btn--confirm flex-center"
+				style="font-size=20">口罩识别</button>
 		</div>
 	</section>
-	<p id="ret" , style="text-align:center; font-size: 80px; background-color: orange; ">请进行签到测试</p>
+	<p id="ret" , style="text-align:center; font-size: 30px; background-color: orange; border-radius: 10px">欢迎使用签到系统，请先进行人脸识别，再进行口罩识别</p>
 </main>
 
 <!-- <div class="jumbotron">
@@ -582,7 +585,7 @@
 						// 获取dom
 						var $ret = $('#ret')
 						// 显示dom
-						$ret.html("<span style='color:green'>你好: </span>" + data.name);
+						$ret.html("<span style='color:green'>你好: </span>" + data.name + "恭喜你通过人脸识别");
 						ahis.show();
 						ahis.html("OK");
 					}, 'json');
@@ -596,7 +599,7 @@
 				ahis.hide();
 				// 发送请求给后端
 				$.post(
-					"/face_identify", // 请求地址
+					"/mask_det", // 请求地址
 					{ data: cropper.getDataURL() }, // 图片数据
 
 					function (data) { // 成功之后的回调函数
@@ -605,7 +608,13 @@
 						// 获取dom
 						var $ret = $('#ret')
 						// 显示dom
-						$ret.html("<span style='color:green'>你好: </span>" + data.name);
+						if (data.code === '200') {
+							if (data.label == "MASK") {
+								$ret.html("你好: <span style='color:green'>" + data.name + "</span>通过了口罩监测, 你带口罩的置信度为" + data.confidence);
+							} else {
+								$ret.html("你好: <span style='color:red'>" + data.name + " </span> 你没带口罩的置信度为" + data.confidence);
+							}
+						}
 						ahis.show();
 						ahis.html("OK");
 					}, 'json');
@@ -661,7 +670,8 @@
 				imgObj.append('<img class="main__lager-photo" src="' + img + '" align="absmiddle"><p>180px*180px</p>');
 				imgObj.append('<img class="main__small-photo" src="' + img + '" align="absmiddle"><p>128px*128px</p>');
 				imgObj.append('<img class="main__mini-photo" src="' + img + '" align="absmiddle"><p>64px*64px</p>');
-				$('#main__submit').show();
+				$('#main__submit').show(); // 变成显示状态
+				$('#main__masksubmit').show(); // 变成显示状态
 			}
 		});
 </script>
