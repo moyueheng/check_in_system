@@ -6,7 +6,7 @@ from .face import Utils, FaceDet, MaskDet
 from .models import Student
 # Create your views here.
 from contant import CONTANT, MSG
-
+import uuid
 def get_face_det():
     students = Student.objects.all()
     know_paths = []
@@ -62,12 +62,18 @@ class FaceIdentifyView(View):
                 'msg'  : MSG[CONTANT.NO_IMG]
             })
         # 转成图片
-        unknow_path = '/data/backup/expLiubo/myh/private/shixun/check_in_system/media/tmp/face_tmp.jpg'
+        unknow_path = f'/data/backup/expLiubo/myh/private/shixun/check_in_system/media/tmp/face_tmp{uuid.uuid1()}.jpg'
         Utils.base2picture(base64_str, unknow_path)
         # 用人脸识别去识别图片
         ret = face_det.who(unknow_path)
         # 给这个人的状态改一下
         print(ret)
+        if not ret :
+            res_dict = {
+                'code' : CONTANT.ON_FACE_INFO,
+                'msg' : "截图的时候放入人脸图片"
+            }
+            return JsonResponse(res_dict)
         try:
             student = Student.objects.get(name =ret['name'])
         except:
@@ -116,7 +122,7 @@ class MaskDetView(View):
                 "msg" : MSG[CONTANT.ON_FACE_INFO]
             })
         # 转成图片
-        unknow_path = '/data/backup/expLiubo/myh/private/shixun/check_in_system/media/tmp/mask_tmp.jpg'
+        unknow_path = f'/data/backup/expLiubo/myh/private/shixun/check_in_system/media/tmp/mask_tmp{uuid.uuid1()}.jpg'
         Utils.base2picture(base64_str, unknow_path)
         # 用人脸识别去识别图片
         ret = mask_det.det(unknow_path)

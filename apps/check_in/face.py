@@ -3,7 +3,7 @@
 python人脸识别测试
 
 """
-
+import uuid
 import face_recognition
 import os
 from os.path import join as pjoin
@@ -62,7 +62,7 @@ class MaskDet():
         bottom = result['bottom']
         left = result['left']
         right = result['right']
-        Utils.draw_box(img_path, left, top, right, bottom, '/data/backup/expLiubo/myh/private/shixun/check_in_system/media/tmp/mask_box.jpg')
+        Utils.draw_box(img_path, left, top, right, bottom, f'/data/backup/expLiubo/myh/private/shixun/check_in_system/media/tmp/mask_box{uuid.uuid1()}.jpg')
         return result
 
 class FaceDet():
@@ -119,6 +119,8 @@ class FaceDet():
             }
         """
         image_to_test_encoding = self.__get_face_encoding(unknown_path)
+        if image_to_test_encoding is None:
+            return None
         face_distances = face_recognition.face_distance(self.face_encodings, image_to_test_encoding)
         # 找到距离最小，且距离最小的小于0.5我们就认为成功了
         for i, face_distance in enumerate(face_distances):
@@ -149,12 +151,16 @@ class FaceDet():
             face_path (str): 人脸路径
 
         Returns:
-            _type_: _description_
+            face_encoding: face_encoding
+            如果没有人脸会返回None
         """
         # 1. 读取图片
         img = face_recognition.load_image_file(face_path)
         # 2. 找到人脸的位置
         face_loc = face_recognition.face_locations(img)
         # 3. 返回人脸位置的编码
-        face_encoding = face_recognition.face_encodings(img, face_loc)[0]
+        faces = face_recognition.face_encodings(img)
+        if not faces:
+            return None
+        face_encoding = face_recognition.face_encodings(img)[0]
         return face_encoding

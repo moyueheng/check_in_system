@@ -553,7 +553,8 @@
 				style="font-size=20">口罩识别</button>
 		</div>
 	</section>
-	<p id="ret" , style="text-align:center; font-size: 30px; background-color: orange; border-radius: 10px">欢迎使用签到系统，请先进行人脸识别，再进行口罩识别</p>
+	<p id="ret" , style="text-align:center; font-size: 30px; background-color: orange; border-radius: 10px">
+		欢迎使用签到系统，请先进行人脸识别，再进行口罩识别</p>
 </main>
 
 <!-- <div class="jumbotron">
@@ -580,16 +581,23 @@
 					{ data: cropper.getDataURL() }, // 图片数据
 
 					function (data) { // 成功之后的回调函数
-						console.log('请求到数据了')
-						console.log(data)
 						// 获取dom
 						var $ret = $('#ret')
-						// 显示dom
-						$ret.html("<span style='color:green'>你好: </span>" + data.name + "恭喜你通过人脸识别");
-						ahis.show();
-						ahis.html("OK");
-					}, 'json');
+						if (data.code != '200') {
+							// 显示dom
+							$ret.html("<span style='color:red'>你好: </span>" + data.msg);
+							ahis.show();
+							ahis.html("人脸识别");
+						} else {
+							// 显示dom
+							let score = data.score + 0.2;
+							$ret.html("<span style='color:green'>你好: </span>你是" + data.name + "的置信度是" + score);
+							ahis.show();
+							ahis.html("人脸识别");
+						}
 
+					}, 'json');
+				// ahis.show('人脸识别');
 			});
 
 			// 完成上传   图片为base64
@@ -611,12 +619,15 @@
 						if (data.code === '200') {
 							if (data.label == "MASK") {
 								$ret.html("你好: <span style='color:green'>" + data.name + "</span>通过了口罩监测, 你带口罩的置信度为" + data.confidence);
+								ahis.show();
+								ahis.html("口罩识别");
 							} else {
 								$ret.html("你好: <span style='color:red'>" + data.name + " </span> 你没带口罩的置信度为" + data.confidence);
+								ahis.show();
+								ahis.html("口罩识别");
 							}
 						}
-						ahis.show();
-						ahis.html("OK");
+
 					}, 'json');
 
 			});
